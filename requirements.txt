@@ -1,0 +1,11 @@
+geopy
+joblib
+mindee
+numpy
+pandas
+Pillow
+plotly
+scikit_learn
+streamlit
+streamlit_plotly_events
+xgboost
