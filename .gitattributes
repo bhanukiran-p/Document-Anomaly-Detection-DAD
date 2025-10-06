@@ -1,0 +1,20 @@
+* text=auto
+
+# Source files — keep LF everywhere
+*.py     text eol=lf
+*.js     text eol=lf
+*.ts     text eol=lf
+*.java   text eol=lf
+*.cs     text eol=lf
+*.go     text eol=lf
+*.rb     text eol=lf
+*.php    text eol=lf
+*.json   text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.md     text eol=lf
+*.sh     text eol=lf
+
+# Windows-only scripts — allow CRLF
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
