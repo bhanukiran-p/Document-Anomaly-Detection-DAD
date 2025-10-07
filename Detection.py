@@ -23,6 +23,7 @@ DASHBOARD_CANDIDATES = [
     "pages/Dashboard.py",
     "pages/1_Dashboard.py",
     "pages/2_Dashboard.py",
+    "pages/DASHBOARD.py",   # ← add this
     "Dashboard",
     "DASHBOARD",
 ]
