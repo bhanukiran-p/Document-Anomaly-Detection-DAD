@@ -56,8 +56,9 @@ st.set_page_config(page_title="Xforia DAD", layout="wide")
 _BASE_CSS = """
 <style>
 header, footer { display:none; }
-.main .block-container, .block-container, .stApp { padding:0 !important; margin:0 !important; max-width:100vw !important; width:100vw !important; }
-body, html { margin:0; padding:0; width:100vw; overflow-x:hidden; }
+.main .block-container, .block-container, .stApp { padding:0 !important; margin:0 !important; max-width:100vw !important; width:100vw !important; background:#ffffff !important; }
+body, html { margin:0; padding:0; width:100vw; overflow-x:hidden; background:#ffffff !important; }
+.main, [data-testid="stAppViewContainer"], [data-testid="stApp"] { background:#ffffff !important; }
 #MainMenu, [data-testid="stAppViewContainer"] > header > div[role="banner"] { display: none !important; }
 
 /* Unified vertical rhythm */
@@ -99,6 +100,7 @@ def _splash_html(logo_html: str) -> str:
   --brand:#1e3c72; --brand2:#2a5298; --brand3:#db123d;
   --section-gap: 28px;
   --gap-sm: 12px;
+  main-section-gap: 80px;
 }}
 .container {{
   background:var(--bg);
@@ -118,7 +120,7 @@ def _splash_html(logo_html: str) -> str:
 
 /* D • A • D cards block */
 .block {{
-  max-width:1060px; margin:0 auto var(--section-gap);
+  max-width:1060px; margin:0 auto var(--section-gap); margin-bottom: 80px;
   display:grid; grid-template-columns: repeat(3, minmax(260px,1fr)); gap:18px;
 }}
 .card {{
@@ -146,9 +148,14 @@ def _splash_html(logo_html: str) -> str:
 .feature p {{ margin:0; line-height:1.5; color:var(--text); text-align:left; }}
 
 /* Metrics */
-.metrics {{ max-width:1060px; margin:0 auto var(--section-gap); display:grid; grid-template-columns:repeat(3,minmax(220px,1fr)); gap:12px; }}
-.metric {{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; text-align:center; }}
-.metric .title {{ font-size:19px; font-weight:900; letter-spacing:.01em; color:#1e3c72; margin-bottom:8px; line-height:1.2; }}
+.metrics {{ max-width:1060px; margin:0 auto var(--section-gap); display:grid; grid-template-columns:repeat(3,minmax(220px,1fr)); gap:12px; margin-bottom: 80px;}}
+.metric {{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 18px; box-shadow:0 4px 12px rgba(15,23,42,0.05); transition:transform .2s, box-shadow .2s, border-color .2s; position:relative; overflow:hidden; margin:0; }}
+.metric::before {{ content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--brand), var(--brand2)); opacity:0; transition:opacity .3s; }}
+.metric:hover {{ transform:translateY(-4px); box-shadow:0 12px 32px rgba(15, 23, 42, 0.12); border-color:var(--brand); }}
+.metric:hover::before {{ opacity:1; }}
+.metric .title {{ font-size:19px; font-weight:900; letter-spacing:.01em; color:#1e3c72; margin-bottom:8px; text-align:center; line-height:1.2; white-space:nowrap; }}
+.metric p {{ margin:0; line-height:1.5; color:var(--text); text-align:left; }}
+
 
 /* BUSINESS IMPACTS - New Design */
 .impacts-section {{ margin:0 0 0 0; padding:0; }}
@@ -307,7 +314,7 @@ def show_splash():
             pass
 
         with st.session_state.splash_ph.container():
-            html_comp(_splash_html(logo_html), height=1100, scrolling=False)
+            html_comp(_splash_html(logo_html), height=1200, scrolling=False)
 
             st.markdown("<div class='after-splash'>", unsafe_allow_html=True)
             col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])

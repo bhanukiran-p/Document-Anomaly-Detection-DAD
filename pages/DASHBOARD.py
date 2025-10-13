@@ -471,18 +471,65 @@ st.markdown("""
 
     /* FIXED footer (same look as splash) + content padding */
     .fixed-footer {
-        position: fixed; left: 0; right: 0; bottom: 0;
-        background: #1f3e73; color: #fff; text-align: center;
-        padding: 12px 10px; z-index: 1000;
-        box-shadow: 0 -2px 12px rgba(31,62,115,.25);
-        font-size: .85em; letter-spacing: .3px;
+        position: fixed; left: 0; right: 0; bottom: 0; height: 64px; z-index: 9999;
+        background: #1e3c72; color: #fff; display: flex; justify-content: center; align-items: center; gap: 18px;
+        font-weight: 700;
     }
     .with-footer { padding-bottom: 72px; }
 
     /* Logo */
-    .fixed-logo { position: fixed; top: 8px; left: 16px; z-index: 2147482000;
+    .fixed-logo { position: fixed; top: 8px; left: 16px; z-index: 10000;
                   background: rgba(255,255,255,.95); border-radius: 6px; padding: 3px 5px; }
     .fixed-logo img { width: 132px; height: 44px; display: block; cursor: pointer; }
+
+    /* Fixed Header */
+    .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: #ffffff;
+        border-bottom: 2px solid #e2e8f0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .header-logo {
+        height: 45px;
+        width: auto;
+    }
+
+    .header-title {
+        color: #1e3c72;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    .header-subtitle {
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
 
     /* Compact headings + icons */
     .fa, .fas, .far, .fal, .fab { font-size: .9em; }
@@ -492,8 +539,8 @@ st.markdown("""
 
     /* Buttons */
     div.stButton > button:first-child { font-weight:700; font-size:14px; width:100%; padding:8px;
-                                        border-radius:6px; background-color:#667eea; color:#fff; border:none; }
-    div.stButton > button:first-child:hover { background-color:#5a67d8; }
+        border-radius:6px; background-color:#1e3c72; color:#fff; border:none; }
+    div.stButton > button:first-child:hover { background-color:#344F80; }
 
     /* Cards */
     .info-box { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; padding: 12px;
@@ -504,26 +551,29 @@ st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 """, unsafe_allow_html=True)
 
-# ---------- LOGO ----------
-def add_fixed_logo():
+def add_header():
+    import pathlib
     cwd = pathlib.Path(os.getcwd())
     here = pathlib.Path(__file__).parent if "__file__" in globals() else cwd
-    candidates = [
-        cwd / "FDN.png", here / "FDN.png", here / "assets" / "FDN.png",
-        cwd / "assets" / "FDN.png", cwd / "FD.png", here / "FD.png"
-    ]
+    candidates = [cwd/"FDN.png", here/"FDN.png", here/"assets"/"FDN.png", cwd/"assets"/"FDN.png"]
     logo_path = next((p for p in candidates if p.exists()), None)
-    if not logo_path:
-        return
-    encoded = base64.b64encode(logo_path.read_bytes()).decode()
+    
+    logo_html = ""
+    if logo_path:
+        encoded = base64.b64encode(logo_path.read_bytes()).decode()
+        logo_html = f'<img src="data:image/png;base64,{encoded}" alt="Logo" class="header-logo"/>'
+    
     st.markdown(f"""
-        <div class="fixed-logo">
-            <a href="/" target="_self">
-                <img src="data:image/png;base64,{encoded}" alt="FDN Logo" />
-            </a>
-        </div>
+    <div class="app-header">
+      <div class="header-left">
+        <a href="/" target="_self">
+        {logo_html}
+        </a>
+      </div>
+    </div>
     """, unsafe_allow_html=True)
-add_fixed_logo()
+
+add_header()
 
 # ---------- CONTENT WRAPPER (padding for fixed footer) ----------
 st.markdown("<div class='with-footer'>", unsafe_allow_html=True)
@@ -614,7 +664,7 @@ if not df.empty:
                 label_visibility="collapsed"
             )
         with col6b:
-            st.markdown("<div style='font-size:12px; visibility:hidden;'>.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='kpi-title' style='visibility:hidden;'>.</div>", unsafe_allow_html=True)
             if st.button("🔄", key="reset_dates", help="Reset to default date range", use_container_width=True):
                 st.session_state.date_reset_counter += 1
                 st.rerun()
@@ -643,6 +693,7 @@ if not df.empty:
         st.markdown(f"<div class='kpi-value'>{fraud_count}</div>", unsafe_allow_html=True)
 
     with col7:
+        st.markdown("<div class='kpi-title' style='visibility:hidden;'>.</div>", unsafe_allow_html=True)
         if st.button("Customer Details", key="customers_btn"):
             st.session_state.show_customer_details = not st.session_state.show_customer_details
 

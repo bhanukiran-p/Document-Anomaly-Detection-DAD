@@ -862,6 +862,54 @@ st.markdown("""
 /* Base */
 *{font-family:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;}
 .stApp{background:var(--bg);}
+/* Fixed Header */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #ffffff;
+  border-bottom: 2px solid #e2e8f0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-logo {
+  height: 45px;
+  width: auto;
+}
+
+.header-title {
+  color: #1e3c72;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.header-subtitle {
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
 /* Hide default chrome */
 header[data-testid="stHeader"],
@@ -875,8 +923,9 @@ section[aria-label="sidebar"],
 [data-testid="stAppViewContainer"]{padding-top:8px !important;}
 .main .block-container{max-width:1180px !important; padding-top:8px !important;}
 
-/* Title */
-.page-title{font-size:2rem; font-weight:800; color:var(--text); letter-spacing:-.02em; margin:16px 0 10px 0;}
+/* Title with button */
+.title-row{display:flex; justify-content:space-between; align-items:center; margin:16px 0 10px 0; gap:20px;}
+.page-title{font-size:2rem; font-weight:800; color:var(--text); letter-spacing:-.02em; margin:0; flex:1;}
 
 /* Tabs (only two, no blanks) */
 .stTabs [data-baseweb="tab-list"]{
@@ -927,17 +976,70 @@ section[aria-label="sidebar"],
   box-shadow:0 6px 20px rgba(15,23,42,.06);
 }
 .results h3{margin:0 0 10px 0; font-weight:900; font-size:1.05rem;}
-.risk-wrap{display:flex; flex-direction:column; align-items:center; gap:6px; padding:16px; border-radius:14px; background:#fff; border:1px solid var(--line);}
-.risk-badge{font-weight:900; letter-spacing:.06em; padding:6px 14px; border-radius:999px; color:#fff;}
-.badge-low{background:#059669;} .badge-medium{background:#f59e0b;} .badge-high{background:#db123d;}
-.risk-score{font-size:2.6rem; font-weight:900; line-height:1;}
-.score-low{color:#059669} .score-medium{color:#f59e0b} .score-high{color:#db123d}
-.risk-label{font-size:.8rem; font-weight:700; color:var(--muted); text-transform:uppercase;}
+.risk-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
 
+.risk-wrap-low {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 2px solid #059669;
+}
+
+.risk-wrap-medium {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 2px solid #f59e0b;
+}
+
+.risk-wrap-high {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  border: 2px solid #db123d;
+}
+
+.risk-badge {
+  font-weight: 900;
+  letter-spacing: .06em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.badge-low {background: #059669;}
+.badge-medium {background: #f59e0b;}
+.badge-high {background: #db123d;}
+
+.risk-score {
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.score-low {color: #059669;}
+.score-medium {color: #f59e0b;}
+.score-high {color: #db123d;}
+
+.risk-label {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+            
 /* Info grid */
 .info{background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; margin-top:10px;}
 .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
-.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px;}
+.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px; margin-bottom:10px;}
+.item:hover {{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 12px 32px rgba(15, 23, 42, 0.15);
+  border-color:var(--brand);
+}}
 .lbl{font-size:.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
 .val{font-size:.95rem; font-weight:600; color:var(--text);}
 
@@ -960,17 +1062,14 @@ section[aria-label="sidebar"],
 .stTextInput input:focus, .stSelectbox select:focus{border-color:var(--brand) !important; box-shadow:0 0 0 2px rgba(30,60,114,.12) !important;}
 .stTextInput label, .stSelectbox label{font-weight:700 !important; color:var(--text) !important;}
 
-/* Launch Insights button row */
-.center-row{display:flex; justify-content:center; margin:18px 0 80px 0;}
-
 /* Fixed logo */
-.fixed-logo{position:fixed; top:10px; left:18px; z-index:10000; background:#fff; border-radius:6px; padding:2px 6px; border:1px solid var(--line);}
+.fixed-logo{position:fixed; top:10px; left:18px; z-index:10000; background:#fff; padding:2px 6px;}
 .fixed-logo img{width:140px; height:45px; display:block;}
 
 /* Fixed footer (blue bar) */
 .custom-footer{
-  position:fixed; left:0; right:0; bottom:0; height:56px; z-index:9999;
-  background:#2c5282; color:#fff; display:flex; justify-content:center; align-items:center; gap:18px;
+  position:fixed; left:0; right:0; bottom:0; height:64px; z-index:9999;
+  background:#1e3c72; color:#fff; display:flex; justify-content:center; align-items:center; gap:18px;
   font-weight:700;
 }
 .footer-divider{opacity:.6;}
@@ -978,6 +1077,7 @@ section[aria-label="sidebar"],
 @media (max-width:768px){
   .grid{grid-template-columns:1fr;}
   .risk-score{font-size:2.1rem;}
+  .title-row{flex-direction:column; align-items:flex-start;}
 }
 </style>
 """, unsafe_allow_html=True)
@@ -995,23 +1095,29 @@ def icon_check():
     return """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <polyline points="20 6 9 17 4 12"/></svg>"""
 
-# ---------- Fixed logo ----------
-def add_fixed_logo():
+def add_header():
     import pathlib
     cwd = pathlib.Path(os.getcwd())
     here = pathlib.Path(__file__).parent if "__file__" in globals() else cwd
     candidates = [cwd/"FDN.png", here/"FDN.png", here/"assets"/"FDN.png", cwd/"assets"/"FDN.png"]
     logo_path = next((p for p in candidates if p.exists()), None)
-    if not logo_path:
-        return
-    encoded = base64.b64encode(logo_path.read_bytes()).decode()
+    
+    logo_html = ""
+    if logo_path:
+        encoded = base64.b64encode(logo_path.read_bytes()).decode()
+        logo_html = f'<img src="data:image/png;base64,{encoded}" alt="Logo" class="header-logo"/>'
+    
     st.markdown(f"""
-    <div class="fixed-logo">
-      <a href="/" target="_self"><img src="data:image/png;base64,{encoded}" alt="Logo"/></a>
+    <div class="app-header">
+      <div class="header-left">
+        <a href="/" target="_self">
+        {logo_html}
+        </a>
+      </div>
     </div>
     """, unsafe_allow_html=True)
 
-add_fixed_logo()
+add_header()
 
 # ---------- Splash screen ----------
 try:
@@ -1224,8 +1330,13 @@ def get_detailed_risk_factors(transaction_data, fraud_score):
     elif fraud_score > 0.4: f.append("AI model shows moderate fraud risk")
     return f if f else ["No significant risk factors detected"]
 
-# ===================== PAGE TITLE =====================
-st.markdown("<h1 class='page-title'>AI-Powered Fraud Detection System</h1>", unsafe_allow_html=True)
+# ===================== PAGE TITLE WITH DASHBOARD BUTTON =====================
+col_title, col_btn = st.columns([4, 1])
+with col_title:
+    st.markdown("<h1 class='page-title'>AI-Powered Fraud Detection System</h1>", unsafe_allow_html=True)
+with col_btn:
+    if st.button("Launch Insights ", key="dashboard_btn", type="secondary", use_container_width=True):
+        go_dashboard()
 
 # ===================== TABS (EXPLICITLY ONLY TWO) =====================
 tab1, tab2 = st.tabs(["Check Analysis", "Online Transaction Analysis"])
@@ -1233,18 +1344,17 @@ tab1, tab2 = st.tabs(["Check Analysis", "Online Transaction Analysis"])
 # ===== CHECK ANALYSIS TAB =====
 with tab1:
     st.markdown("<h2 class='section-title'>Enhanced Check Analysis with AI</h2>", unsafe_allow_html=True)
-    c1, c2 = st.columns([1,1], gap="large")
+    c1, c2 = st.columns([2,3], gap="large")
 
     with c1:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         uploaded_file = st.file_uploader("Drop your check image here", type=['jpg','jpeg','png'], label_visibility="collapsed")
         if uploaded_file:
             try:
                 uploaded_file.seek(0)
                 img = Image.open(uploaded_file)
                 st.image(img, use_container_width=True)
-                if st.button("Analyze Check", type="primary"):
-                    with st.spinner("Analyzing your check..."):
+                if st.button("Analyze Check", type="primary", key="analyze_check_btn"):
+                    with st.spinner("🔍 Analyzing your check..."):
                         uploaded_file.seek(0)
                         extracted, combined, raw, ml_s, rule_s, ml_ens = mindee_ocr_analysis_with_ml(uploaded_file)
                     if extracted and combined is not None:
@@ -1262,7 +1372,6 @@ with tab1:
                         st.error("Unable to process the check. Please try again.")
             except Exception as e:
                 st.error(f"Error: {e}")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with c2:
         if 'check_results' in st.session_state:
@@ -1272,38 +1381,30 @@ with tab1:
             rule_score = float(res.get('rule_score', 0))
             level, risk_class = get_risk_level(fs)
 
-            st.markdown("<div class='results'>", unsafe_allow_html=True)
-            st.markdown("<h3>Enhanced Analysis Results</h3>", unsafe_allow_html=True)
             st.markdown(f"""
-              <div class="risk-wrap">
-                <div class="risk-badge badge-{risk_class}">{level}</div>
-                <div class="risk-score score-{risk_class}">{fs*100:.0f}%</div>
-                <div class="risk-label">Fraud Risk Score</div>
-              </div>
+                <div class="risk-wrap risk-wrap-{risk_class}">
+                    <div class="risk-badge badge-{risk_class}">{level}</div>
+                    <div class="risk-score score-{risk_class}">{fs*100:.0f}%</div>
+                    <div class="risk-label">Fraud Risk Score</div>
+                </div>
             """, unsafe_allow_html=True)
-            st.progress(min(max(fs, 0.0), 1.0))
-
-            st.markdown("<div class='info'>", unsafe_allow_html=True)
-            st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:0 0 8px 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
+            
+            st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:8px 0 0 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
             st.markdown("<div class='grid'>", unsafe_allow_html=True)
             for k, v in res['extracted_data'].items():
                 st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)
             st.markdown("</div></div>", unsafe_allow_html=True)
 
             factors = get_check_risk_factors(res.get('raw_data', {}), ml_score, rule_score)
-            st.markdown("<div class='factors'>", unsafe_allow_html=True)
             st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:0 0 8px 0;'>{icon_alert()} Risk Factors</h4>", unsafe_allow_html=True)
             for fct in factors:
                 st.markdown(f"<div class='factor'><div class='dot'>!</div><span>{fct}</span></div>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-
             if fs >= 0.7:
                 st.markdown(f"<div class='rec rec-high'><h4>{icon_check()} Recommendations</h4><div>High fraud risk detected — manual verification & additional auth recommended.</div></div>", unsafe_allow_html=True)
             elif fs >= 0.4:
                 st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>Medium risk — perform extra verification before processing.</div></div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>Low risk — transaction appears legitimate.</div></div>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
 
 # ===== TRANSACTION ANALYSIS TAB =====
 with tab2:
@@ -1315,10 +1416,9 @@ with tab2:
     elif 18 <= now < 24: tod = "Evening (6PM-12AM)"
     else: tod = "Night (12AM-6AM)"
 
-    c1, c2 = st.columns([1,1], gap="large")
+    c1, c2 = st.columns([2,3], gap="large")
 
     with c1:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         with st.form("transaction_form"):
             acct = st.text_input("Account Number", placeholder="Enter account number")
             amt_in = st.text_input("Transaction Amount ($)", placeholder="0.00")
@@ -1349,8 +1449,7 @@ with tab2:
                     st.session_state.transaction_results = {'data': data, 'fraud_score': score, 'ensemble_result': res}
                 else:
                     st.session_state.transaction_results = {'data': data, 'fraud_score': float(res), 'ensemble_result': None}
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+                st.rerun()    
 
     with c2:
         if 'transaction_results' in st.session_state:
@@ -1358,18 +1457,15 @@ with tab2:
             d = r['data']; s = float(r['fraud_score'])
             level, risk_class = get_risk_level(s)
 
-            st.markdown("<div class='results'>", unsafe_allow_html=True)
             st.markdown("<h3>Analysis Results</h3>", unsafe_allow_html=True)
             st.markdown(f"""
-              <div class="risk-wrap">
-                <div class="risk-badge badge-{risk_class}">{level}</div>
-                <div class="risk-score score-{risk_class}">{s*100:.0f}%</div>
-                <div class="risk-label">Fraud Risk Score</div>
-              </div>
+               <div class="risk-wrap risk-wrap-{risk_class}">
+                    <div class="risk-badge badge-{risk_class}">{level}</div>
+                    <div class="risk-score score-{risk_class}">{s*100:.0f}%</div>
+                    <div class="risk-label">Fraud Risk Score</div>
+                </div>
             """, unsafe_allow_html=True)
-            st.progress(min(max(s, 0.0), 1.0))
 
-            st.markdown("<div class='info'>", unsafe_allow_html=True)
             st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:0 0 8px 0;'>{icon_info()} Transaction Summary</h4>", unsafe_allow_html=True)
             st.markdown("<div class='grid'>", unsafe_allow_html=True)
             for label, value in [
@@ -1386,7 +1482,7 @@ with tab2:
             st.markdown("</div></div>", unsafe_allow_html=True)
 
             factors = get_detailed_risk_factors(d, s)
-            st.markdown("<div class='factors'>", unsafe_allow_html=True)
+            
             st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:0 0 8px 0;'>{icon_alert()} Risk Factors</h4>", unsafe_allow_html=True)
             for fct in factors:
                 st.markdown(f"<div class='factor'><div class='dot'>!</div><span>{fct}</span></div>", unsafe_allow_html=True)
@@ -1398,15 +1494,6 @@ with tab2:
                 st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>REQUEST VERIFICATION — Medium risk. Add extra authentication.</div></div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>APPROVE — Low fraud risk.</div></div>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-
-# ===== Centered launch button (kept original) =====
-st.markdown("<div class='center-row'>", unsafe_allow_html=True)
-_, cc, _ = st.columns([1,1,1])
-with cc:
-    if st.button("LAUNCH INSIGHTS", type="primary", use_container_width=True):
-        go_dashboard()
-st.markdown("</div>", unsafe_allow_html=True)
 
 # ===== Fixed footer (kept original style) =====
 st.markdown("""
