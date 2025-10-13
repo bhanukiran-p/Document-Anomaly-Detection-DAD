@@ -1,25 +1,21 @@
-# Detection.py
-
+# Transaction Analysis Page
 
 import streamlit as st 
-import pandas as pd
-import numpy as np
-from PIL import Image
-import tempfile
-import os
 from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore")
 import base64
+import os
+import pathlib
 
 # ----- Page config -----
 st.set_page_config(
-    page_title="Xforia DAD - Fraud Detection",
+    page_title="Xforia DAD - Real-time Transaction Analysis",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# ---------- Navigation functions ----------
+# Navigation functions
 def go_dashboard():
     candidates = [
         "pages/Dashboard.py",
@@ -37,20 +33,34 @@ def go_dashboard():
             continue
     st.warning("Couldn't navigate to Dashboard.")
 
-def go_transaction_page():
+def go_home():
+    # Try to navigate to the main app page
+    try:
+        # First try just switching to the home page without a specific file
+        st.switch_page("Detection.py")
+        return
+    except Exception:
+        pass
+    
+    # If that doesn't work, try other common main file names
     candidates = [
-        "pages/Transaction_Analysis.py",
-        "pages/transaction_analysis.py",
-        "pages/Online_Transaction.py",
-        "pages/online_transaction.py",
+        "Fraud_Detection.py",
+        "fraud_detection.py",
+        "main.py",
+        "Main.py",
+        "Home.py",
+        "home.py"
     ]
+    
     for target in candidates:
         try:
             st.switch_page(target)
             return
         except Exception:
             continue
-    st.warning("Couldn't navigate to Transaction Analysis page. Please create pages/Transaction_Analysis.py")
+    
+    # If nothing works, show an error with helpful message
+    st.error("Couldn't navigate back to Check Analysis. Please ensure your main file is named 'app.py' or 'Fraud_Detection.py'")
 
 # ========= Styles =========
 st.markdown("""
@@ -227,23 +237,11 @@ section[aria-label="sidebar"],
 /* Section header */
 .section-title{font-size:1.35rem; font-weight:800; color:var(--text); margin:18px 0 12px 0;}
 
-/* Uploader */
-[data-testid="stFileUploader"]{
-  background:#f8fafc; border:2px dashed #d6dee8; border-radius:10px;
-  padding:22px; text-align:center;
-}
-[data-testid="stFileUploader"]:hover{border-color:#b9c5d3;}
-[data-testid="stFileUploader"] section{border:none !important;}
-[data-testid="stFileUploader"] label,
-[data-testid="stFileUploader"] small,
-[data-testid="stFileUploader"] [aria-live="polite"]{display:none !important;}
-
 /* Buttons */
 .stButton>button{
   background:var(--accent) !important; color:#fff !important; border:none !important;
   border-radius:10px !important; padding:12px 22px !important; font-weight:800 !important;
   letter-spacing:.04em !important; box-shadow:none !important; transition:transform .15s ease, filter .15s ease !important;
-  width: 100% !important;
 }
 .stButton>button:hover{filter:brightness(.96) !important;}
 .stButton>button:active{transform:translateY(1px) !important;}
@@ -327,6 +325,13 @@ section[aria-label="sidebar"],
 .rec-high{background:#ffe9ee; border-color:#db123d;}
 .rec h4{margin:0 0 6px 0; font-weight:900;}
 
+/* Inputs */
+.stTextInput input, .stSelectbox select{
+  border:1px solid var(--line) !important; border-radius:8px !important; padding:10px 12px !important; font-size:.95rem !important;
+}
+.stTextInput input:focus, .stSelectbox select:focus{border-color:var(--brand) !important; box-shadow:0 0 0 2px rgba(30,60,114,.12) !important;}
+.stTextInput label, .stSelectbox label{font-weight:700 !important; color:var(--text) !important;}
+
 /* Fixed footer */
 .custom-footer{
   position:fixed; left:0; right:0; bottom:0; height:64px; z-index:9999;
@@ -356,10 +361,9 @@ def icon_check():
     <polyline points="20 6 9 17 4 12"/></svg>"""
 
 def add_header():
-    import pathlib
     cwd = pathlib.Path(os.getcwd())
     here = pathlib.Path(__file__).parent if "__file__" in globals() else cwd
-    candidates = [cwd/"FDN.png", here/"FDN.png", here/"assets"/"FDN.png", cwd/"assets"/"FDN.png"]
+    candidates = [cwd/"FDN.png", here/"FDN.png", here/"assets"/"FDN.png", cwd/"assets"/"FDN.png", here.parent/"FDN.png", here.parent/"assets"/"FDN.png"]
     logo_path = next((p for p in candidates if p.exists()), None)
     
     logo_html = ""
@@ -367,7 +371,6 @@ def add_header():
         encoded = base64.b64encode(logo_path.read_bytes()).decode()
         logo_html = f'<img src="data:image/png;base64,{encoded}" alt="Logo" class="header-logo"/>'
     
-    # Header with hamburger
     st.markdown(f"""
     <div class="app-header">
       <div class="header-left">
@@ -452,304 +455,174 @@ def add_header():
 
 add_header()
 
-# ---------- Splash screen ----------
-try:
-    from splash_screen import show_splash
-    
-    # Check if we should show splash
-    if "show_splash" not in st.session_state:
-        st.session_state.show_splash = True
-
-    if st.session_state.get("show_splash", True):
-        show_splash()
-        st.stop()
-except ImportError:
-    # Fallback to simple splash if splash_screen.py doesn't exist
-    def show_splash_screen():
-        st.markdown("""
-            <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;margin-top:80px;'>
-                <h1 style='margin:0;font-size:3rem;font-weight:900;color:#1e3c72;'>Welcome to Fraud Detection</h1>
-                <p style='opacity:.7;margin:0;font-size:1.2rem;font-weight:500;'>Your Guardian Against Fraud</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col2:
-            if st.button("Get Started", type="primary", use_container_width=True):
-                st.session_state.show_splash = False
-                st.rerun()
-
-    # Check if we should show splash
-    if "show_splash" not in st.session_state:
-        st.session_state.show_splash = True
-
-    if st.session_state.get("show_splash", True):
-        show_splash_screen()
-        st.stop()
-
 # ---------- ML helpers ----------
 try:
-    from ML_Model import ml_transaction_analysis, mock_transaction_analysis
+    from ML_Model import ml_transaction_analysis
 except ImportError:
     def ml_transaction_analysis(data):
         import hashlib
         h = hashlib.sha256(str(data).encode()).hexdigest()
         return (int(h, 16) % 1000) / 1000.0
-    mock_transaction_analysis = ml_transaction_analysis
-
-# ===================== MINDEE CONFIG =====================
-MINDEE_API_KEY = "md_KqeDU4LG1zvPTpm7yANOMZsU5bDnb3MN"
-MINDEE_ACCOUNT_NAME = ""
-MINDEE_ENDPOINT_NAME = ""
-MINDEE_VERSION = "1"
-MINDEE_MODEL_ID = "ae8aebe3-40a8-49ec-9545-daf787b1bbe5"
-
-def extract_check_data(response):
-    try:
-        fields = response.inference.result.fields
-        names = ['memo','pay_to','bank_name','signature','check_date','payer_name',
-                 'word_amount','check_number','number_amount','payer_address',
-                 'account_number','routing_number']
-        return {n: (fields[n].value if n in fields else None) for n in names}
-    except Exception as e:
-        st.error(f"Error extracting check data: {e}")
-        return None
-
-def convert_ocr_to_ml_format(check_data):
-    amount = check_data.get('number_amount', 0) or 0
-    return {
-        'account_number': str(check_data.get('account_number') or 'UNKNOWN'),
-        'amount': float(amount),
-        'type': 'Check',
-        'merchant': str(check_data.get('memo') or 'Check Payment'),
-        'location': 'Unknown',
-        'recipient': str(check_data.get('pay_to') or 'Unknown'),
-        'time': 'Morning (6AM-12PM)',
-        'device': 'Check'
-    }
-
-def calculate_fraud_score(check_data):
-    s = 0.1
-    if not check_data.get('pay_to'): s += 0.2
-    if not check_data.get('number_amount'): s += 0.3
-    if not check_data.get('signature'): s += 0.3
-    if not check_data.get('bank_name'): s += 0.2
-    if not check_data.get('account_number'): s += 0.2
-    if not check_data.get('routing_number'): s += 0.2
-    amt = check_data.get('number_amount', 0)
-    if amt and amt > 10000: s += 0.2
-    elif amt and amt > 5000: s += 0.1
-    words = check_data.get('word_amount', '')
-    if words and amt and len(words.split()) < 3: s += 0.1
-    cd = check_data.get('check_date')
-    if cd:
-        try:
-            d = datetime.strptime(str(cd), '%Y-%m-%d')
-            days = (datetime.now() - d).days
-            if days > 180: s += 0.2
-            elif days > 90: s += 0.1
-        except:
-            s += 0.1
-    return min(s, 0.95)
-
-def mindee_ocr_analysis_with_ml(image_file):
-    try:
-        try:
-            from mindee import ClientV2, InferenceParameters
-        except ImportError:
-            st.error("Mindee SDK not installed.")
-            return (None,)*6
-
-        if not MINDEE_API_KEY:
-            st.error("MINDEE_API_KEY is not set.")
-            return (None,)*6
-
-        try:
-            client = ClientV2(MINDEE_API_KEY, region="us")
-        except TypeError:
-            client = ClientV2(MINDEE_API_KEY)
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp:
-            tmp.write(image_file.read())
-            path = tmp.name
-
-        try:
-            src = client.source_from_path(path)
-
-            if MINDEE_ACCOUNT_NAME and MINDEE_ENDPOINT_NAME:
-                params = InferenceParameters(
-                    account_name=MINDEE_ACCOUNT_NAME,
-                    endpoint_name=MINDEE_ENDPOINT_NAME,
-                    version=MINDEE_VERSION or "1",
-                )
-            elif MINDEE_MODEL_ID:
-                params = InferenceParameters(model_id=MINDEE_MODEL_ID)
-            else:
-                st.error("Mindee not configured.")
-                return (None,)*6
-
-            resp = client.enqueue_and_get_inference(src, params)
-            check_data = extract_check_data(resp)
-            if not check_data:
-                return (None,)*6
-
-            extracted = {
-                "Pay To": check_data.get('pay_to', 'N/A'),
-                "Bank Name": check_data.get('bank_name', 'N/A'),
-                "Check Date": check_data.get('check_date', 'N/A'),
-                "Payer Name": check_data.get('payer_name', 'N/A'),
-                "Amount (Words)": check_data.get('word_amount', 'N/A'),
-                "Amount (Number)": f"${check_data.get('number_amount', 0):,.2f}" if check_data.get('number_amount') else 'N/A',
-                "Check Number": check_data.get('check_number', 'N/A'),
-                "Account Number": check_data.get('account_number', 'N/A'),
-                "Routing Number": check_data.get('routing_number', 'N/A'),
-                "Payer Address": check_data.get('payer_address', 'N/A'),
-                "Memo": check_data.get('memo', 'N/A'),
-                "Signature Present": "Yes" if check_data.get('signature') else "No"
-            }
-
-            tx = convert_ocr_to_ml_format(check_data)
-            ml_res = ml_transaction_analysis(tx)
-            if isinstance(ml_res, dict):
-                ml_score = float(ml_res.get('ensemble_probability', 0.0))
-                ml_ens = ml_res
-            else:
-                ml_score = float(ml_res or 0.0)
-                ml_ens = None
-
-            rule_score = calculate_fraud_score(check_data)
-            combined = ml_score * 0.7 + rule_score * 0.3
-            return extracted, combined, check_data, ml_score, rule_score, ml_ens
-
-        finally:
-            try: os.unlink(path)
-            except Exception: pass
-
-    except Exception as e:
-        st.error(f"Error processing check: {e}")
-        return (None,)*6
 
 def get_risk_level(score):
     if score >= 0.7: return "HIGH RISK", "high"
     elif score >= 0.4: return "MEDIUM RISK", "medium"
     else: return "LOW RISK", "low"
 
-def get_check_risk_factors(check_data, ml_score, rule_score):
+def get_detailed_risk_factors(transaction_data, fraud_score):
     f = []
-    if not check_data.get('signature'): f.append("Missing signature")
-    if not check_data.get('number_amount'): f.append("Missing amount")
-    if not check_data.get('pay_to'): f.append("Missing payee")
-    if not check_data.get('bank_name'): f.append("Missing bank information")
-    amt = check_data.get('number_amount', 0)
-    if amt and amt > 10000: f.append("Very high check amount")
-    elif amt and amt > 5000: f.append("High check amount")
-    cd = check_data.get('check_date')
-    if cd:
-        try:
-            days = (datetime.now() - datetime.strptime(str(cd), '%Y-%m-%d')).days
-            if days > 180: f.append("Check is over 6 months old")
-            elif days > 90: f.append("Check is over 3 months old")
-        except:
-            f.append("Invalid check date")
-    if ml_score > 0.8: f.append("AI detected very high fraud risk")
-    elif ml_score > 0.6: f.append("AI detected elevated fraud risk")
-    words = check_data.get('word_amount', '')
-    if words and amt and len(words.split()) < 3: f.append("Incomplete written amount")
+    amount = float(transaction_data.get('amount', 0))
+    if amount > 10000: f.append(f"Very high transaction amount (${amount:,.2f})")
+    elif amount > 5000: f.append(f"High transaction amount (${amount:,.2f})")
+    elif amount > 1000: f.append(f"Moderate transaction amount (${amount:,.2f})")
+    tod = transaction_data.get('time', '')
+    if "Night" in tod: f.append("Unusual transaction time (night hours)")
+    device = transaction_data.get('device', '')
+    if device == "ATM" and amount > 1000: f.append("Large ATM withdrawal")
+    loc = (transaction_data.get('location') or '').strip().lower()
+    if not loc or loc == 'unknown': f.append("Unknown transaction location")
+    rec = transaction_data.get('recipient', '')
+    if not rec or rec.lower() == 'unknown': f.append("Unverified recipient")
+    if fraud_score > 0.8: f.append("AI model shows very high fraud confidence")
+    elif fraud_score > 0.6: f.append("AI model shows elevated fraud risk")
+    elif fraud_score > 0.4: f.append("AI model shows moderate fraud risk")
     return f if f else ["No significant risk factors detected"]
 
 # ===================== PAGE HEADER WITH NAVIGATION BUTTONS =====================
-col_title, col_btn1 = st.columns([4, 1])
+col_title, col_btn1, col_btn2 = st.columns([3, 1, 1])
 with col_title:
-    st.markdown("<h1 class='page-title'>Document Anomaly For Finance</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='page-title'>Real-time Transaction Analysis</h1>", unsafe_allow_html=True)
 with col_btn1:
-    if st.button("Real-time Transaction", key="transaction_btn", type="secondary", use_container_width=True):
-        go_transaction_page()
+    if st.button("Check Analysis", key="check_btn", type="secondary", use_container_width=True):
+        go_home()
+with col_btn2:
+    if st.button("Check Insights", key="dashboard_btn", type="secondary", use_container_width=True):
+        go_dashboard()
 
-# ===================== CHECK ANALYSIS (MAIN PAGE) =====================
-st.markdown("<h2 class='section-title'>Enhanced Check Analysis with AI</h2>", unsafe_allow_html=True)
+st.markdown("<h2 class='section-title'>Analyze Online Transactions</h2>", unsafe_allow_html=True)
+
+# Get current time of day
+now = datetime.now().hour
+if 6 <= now < 12: tod = "Morning (6AM-12PM)"
+elif 12 <= now < 18: tod = "Afternoon (12PM-6PM)"
+elif 18 <= now < 24: tod = "Evening (6PM-12AM)"
+else: tod = "Night (12AM-6AM)"
 
 c1, c2 = st.columns([2,3], gap="large")
 
 with c1:
-    st.markdown("#### Upload Check Image")
-    uploaded_file = st.file_uploader("Drop your check image here", type=['jpg','jpeg','png'], label_visibility="collapsed", key="check_uploader")
-    
-    if uploaded_file:
-        try:
-            uploaded_file.seek(0)
-            img = Image.open(uploaded_file)
-            st.image(img, use_container_width=True)
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("Analyze Check", type="primary", key="analyze_check_btn", use_container_width=True):
-                with st.spinner("Analyzing your check..."):
-                    uploaded_file.seek(0)
-                    extracted, combined, raw, ml_s, rule_s, ml_ens = mindee_ocr_analysis_with_ml(uploaded_file)
-                
-                if extracted and combined is not None:
-                    st.success("Check processed successfully!")
-                    st.session_state.check_results = {
-                        'extracted_data': extracted,
-                        'fraud_score': combined,
-                        'ml_score': ml_s,
-                        'rule_score': rule_s,
-                        'raw_data': raw,
-                        'ml_ensemble': ml_ens
+    with st.form("transaction_form"):
+        st.markdown("#### Enter Transaction Details")
+        acct = st.text_input("Account Number", placeholder="Enter account number")
+        amt_in = st.text_input("Transaction Amount ($)", placeholder="0.00")
+        recip = st.text_input("Recipient Name", placeholder="Enter recipient name")
+        ttype = st.selectbox("Transaction Type", ["Transfer", "Payment", "Withdrawal", "Deposit"])
+        merch = st.text_input("Merchant", placeholder="Enter merchant name")
+        loc = st.text_input("Transaction Location", placeholder="City, State")
+        device = st.selectbox("Device Used", options=["Web Browser", "Mobile App", "ATM", "Phone"])
+        submit = st.form_submit_button("Analyze Transaction", type="primary", use_container_width=True)
+
+        amount = 0.0
+        if amt_in:
+            try:
+                amount = float(amt_in.replace(',', '').replace('$', ''))
+            except ValueError:
+                st.error("Please enter a valid amount")
+                amount = 0.0
+
+        if submit:
+            if not acct:
+                st.error("Please enter an account number")
+            elif amount <= 0:
+                st.error("Please enter a valid transaction amount")
+            else:
+                exact = datetime.now().strftime("%I:%M:%S %p on %B %d, %Y")
+                data = {
+                    "account_number": acct, 
+                    "amount": amount, 
+                    "recipient": recip or "Unknown", 
+                    "type": ttype,
+                    "merchant": merch or "N/A", 
+                    "location": loc or "Unknown", 
+                    "time": tod, 
+                    "exact_time": exact, 
+                    "device": device
+                }
+                with st.spinner("Analyzing transaction..."):
+                    res = ml_transaction_analysis(data)
+                if isinstance(res, dict):
+                    score = float(res.get('ensemble_probability', 0.0))
+                    st.session_state.transaction_results = {
+                        'data': data, 
+                        'fraud_score': score, 
+                        'ensemble_result': res
                     }
-                    st.rerun()
                 else:
-                    st.error("Unable to process the check. Please try again.")
-        except Exception as e:
-            st.error(f"Error: {e}")
-    
+                    st.session_state.transaction_results = {
+                        'data': data, 
+                        'fraud_score': float(res), 
+                        'ensemble_result': None
+                    }
+                st.success("Transaction analyzed successfully!")
+                st.rerun()
 
 with c2:
-    if 'check_results' in st.session_state:
-        res = st.session_state.check_results
-        fs = float(res['fraud_score'])
-        ml_score = float(res.get('ml_score', 0))
-        rule_score = float(res.get('rule_score', 0))
-        level, risk_class = get_risk_level(fs)
+    if 'transaction_results' in st.session_state:
+        r = st.session_state.transaction_results
+        d = r['data']
+        s = float(r['fraud_score'])
+        level, risk_class = get_risk_level(s)
 
-        # RESULTS AT TOP
+        st.markdown("<h3>Analysis Results</h3>", unsafe_allow_html=True)
+        
+        # Risk Score Display
         st.markdown(f"""
-            <div class="risk-wrap risk-wrap-{risk_class}">
+           <div class="risk-wrap risk-wrap-{risk_class}">
                 <div class="risk-badge badge-{risk_class}">{level}</div>
-                <div class="risk-score score-{risk_class}">{fs*100:.0f}%</div>
+                <div class="risk-score score-{risk_class}">{s*100:.0f}%</div>
                 <div class="risk-label">Fraud Risk Score</div>
             </div>
         """, unsafe_allow_html=True)
-        
+
         # Risk Factors
-        factors = get_check_risk_factors(res.get('raw_data', {}), ml_score, rule_score)
+        factors = get_detailed_risk_factors(d, s)
         st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:0 0 8px 0;'>{icon_alert()} Risk Factors</h4>", unsafe_allow_html=True)
         for fct in factors:
             st.markdown(f"<div class='factor'><div class='dot'>!</div><span>{fct}</span></div>", unsafe_allow_html=True)
-        
-        # Recommendations
-        if fs >= 0.7:
-            st.markdown(f"<div class='rec rec-high'><h4>{icon_check()} Recommendations</h4><div>High fraud risk detected — manual verification & additional auth recommended.</div></div>", unsafe_allow_html=True)
-        elif fs >= 0.4:
-            st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>Medium risk — perform extra verification before processing.</div></div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>Low risk — transaction appears legitimate.</div></div>", unsafe_allow_html=True)
 
-        # EXTRACTED INFORMATION AT BOTTOM
-        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 8px 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
+        # Recommendations
+        if s >= 0.7:
+            st.markdown(f"<div class='rec rec-high'><h4>{icon_check()} Recommendations</h4><div>BLOCK — High fraud risk. Require additional verification and manual review.</div></div>", unsafe_allow_html=True)
+        elif s >= 0.4:
+            st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>REQUEST VERIFICATION — Medium risk. Add extra authentication.</div></div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>APPROVE — Low fraud risk.</div></div>", unsafe_allow_html=True)
+
+        # Transaction Summary
+        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 8px 0;'>{icon_info()} Transaction Summary</h4>", unsafe_allow_html=True)
         st.markdown("<div class='grid'>", unsafe_allow_html=True)
-        for k, v in res['extracted_data'].items():
-            st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)
+        for label, value in [
+            ("Account", d['account_number']),
+            ("Amount", f"${d['amount']:,.2f}"),
+            ("Type", d['type']),
+            ("Recipient", d['recipient']),
+            ("Merchant", d['merchant']),
+            ("Location", d['location']),
+            ("Device", d['device']),
+            ("Time", d.get('exact_time', 'N/A'))
+        ]:
+            st.markdown(f"<div class='item'><div class='lbl'>{label}</div><div class='val'>{value}</div></div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
     else:
-        st.info("Upload a check image on the left to begin analysis")
+        st.info("Enter transaction details on the left to begin analysis")
         st.markdown("""
             <div style='margin-top:20px; padding:20px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;'>
                 <h4 style='margin:0 0 12px 0; color:#1e3c72;'>How it works:</h4>
                 <ol style='margin:0; padding-left:20px; color:#475569;'>
-                    <li style='margin-bottom:8px;'>Upload a check image (JPG, JPEG, or PNG)</li>
-                    <li style='margin-bottom:8px;'>Click "Analyze Check" to process</li>
-                    <li style='margin-bottom:8px;'>View fraud risk score and detailed analysis</li>
-                    <li>Review recommendations and extracted check data</li>
+                    <li style='margin-bottom:8px;'>Fill in the transaction details in the form</li>
+                    <li style='margin-bottom:8px;'>Click "Analyze Transaction" to process</li>
+                    <li style='margin-bottom:8px;'>View fraud risk score and analysis</li>
+                    <li>Review recommendations and transaction summary</li>
                 </ol>
             </div>
         """, unsafe_allow_html=True)
