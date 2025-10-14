@@ -496,7 +496,7 @@ with col_btn1:
     if st.button("Check Analysis", key="check_btn", type="secondary", use_container_width=True):
         go_home()
 with col_btn2:
-    if st.button("Check Insights", key="dashboard_btn", type="secondary", use_container_width=True):
+    if st.button("Insights", key="dashboard_btn", type="secondary", use_container_width=True):
         go_dashboard()
 
 st.markdown("<h2 class='section-title'>Analyze Online Transactions</h2>", unsafe_allow_html=True)
