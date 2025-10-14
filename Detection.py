@@ -658,7 +658,6 @@ if st.session_state.get("show_splash", False):
                 st.rerun()
         st.stop()
 
-add_header()
 
 # ---------- ML helpers ----------
 try:
