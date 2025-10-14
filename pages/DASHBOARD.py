@@ -292,7 +292,7 @@ def show_data_preview(df):
     st.markdown("""
         <div class='preview-box'>
             <div class='preview-header'>
-                <i class='fas fa-table'></i> Data Preview
+                Data Preview
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -340,7 +340,7 @@ def show_data_preview(df):
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Column information
-    st.markdown("** Column Information:**")
+    st.markdown("**Column Information:**")
     col_info = pd.DataFrame({
         'Column Name': df.columns,
         'Data Type': df.dtypes.astype(str),
@@ -350,19 +350,19 @@ def show_data_preview(df):
     st.dataframe(col_info, use_container_width=True, height=200)
     
     # Sample data
-    st.markdown("** First 10 Rows:**")
+    st.markdown("**First 10 Rows:**")
     st.dataframe(df.head(10), use_container_width=True, height=300)
     
     # Action buttons
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        if st.button("Proceed to Insights", key="proceed_to_insights", use_container_width=True):
+        if st.button("▶ Proceed to Insights", key="proceed_to_insights", use_container_width=True):
             st.session_state.current_page = 'insights'
             st.session_state.uploaded_data = df
             st.rerun()
     
     with col2:
-        if st.button("Upload Different File", key="upload_different", use_container_width=True):
+        if st.button("↻ Upload Different File", key="upload_different", use_container_width=True):
             st.session_state.uploaded_data = None
             st.session_state.current_page = 'upload'
             st.rerun()
@@ -377,7 +377,7 @@ st.markdown("<div class='with-footer'>", unsafe_allow_html=True)
 # ---------- PAGE ROUTING ----------
 if st.session_state.current_page == 'upload':
     # ---------- UPLOAD PAGE ----------
-    st.markdown('<h1 style="margin:2px 0 10px 0; font-size:28px;"><i class="fas fa-upload"></i> Data Upload</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="margin:2px 0 10px 0; font-size:28px;"><i class="fas fa-cloud-upload-alt"></i> Data Upload</h1>', unsafe_allow_html=True)
     
     st.markdown("""
     <div class='upload-box'>
@@ -400,7 +400,7 @@ if st.session_state.current_page == 'upload':
                 df = load_excel_data(uploaded_file)
             
             if not df.empty:
-                st.success(f"Successfully loaded {len(df):,} rows and {len(df.columns)} columns!")
+                st.success(f"✅ Successfully loaded {len(df):,} rows and {len(df.columns)} columns!")
                 show_data_preview(df)
             else:
                 st.error("Failed to load data. Please check your file format.")
@@ -410,7 +410,7 @@ elif st.session_state.current_page == 'insights':
     st.markdown('<h1 style="margin:2px 0 10px 0; font-size:28px;"><i class="fas fa-chart-line"></i> AI Anomaly Insights</h1>', unsafe_allow_html=True)
     
     # Back button
-    if st.button("Back to Upload", key="back_to_upload"):
+    if st.button("← Back to Upload", key="back_to_upload"):
         st.session_state.current_page = 'upload'
         st.rerun()
     
@@ -665,7 +665,7 @@ elif st.session_state.current_page == 'insights':
                 st.info("No fraud transactions found for Sankey diagram")
     else:
         st.warning("No data available. Please go back and upload a file.")
-        if st.button("Go to Upload Page"):
+        if st.button("← Go to Upload Page"):
             st.session_state.current_page = 'upload'
             st.rerun()
 
