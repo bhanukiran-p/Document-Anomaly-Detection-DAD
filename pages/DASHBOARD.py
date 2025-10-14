@@ -400,7 +400,7 @@ if st.session_state.current_page == 'upload':
                 df = load_excel_data(uploaded_file)
             
             if not df.empty:
-                st.success(f"✅ Successfully loaded {len(df):,} rows and {len(df.columns)} columns!")
+                #st.success(f" Successfully loaded {len(df):,} rows and {len(df.columns)} columns!")
                 show_data_preview(df)
             else:
                 st.error("Failed to load data. Please check your file format.")
