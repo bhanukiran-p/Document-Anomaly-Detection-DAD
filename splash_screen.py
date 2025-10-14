@@ -1,5 +1,3 @@
-# splash_screen.py
-
 import streamlit as st
 from streamlit.components.v1 import html as html_comp
 import base64
@@ -64,7 +62,7 @@ body, html { margin:0; padding:0; width:100vw; overflow-x:hidden; background:#ff
 </style>
 """
 
-def _splash_html(logo_html: str) -> str:
+def _splash_html(logo_html: str, impact_image_html: str = "") -> str:
     return f"""
 <style>
 :root {{
@@ -79,7 +77,7 @@ def _splash_html(logo_html: str) -> str:
   font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,'Noto Sans';
   color:var(--text);
   margin:0;
-  padding:0 0 100px 0;  /* Added bottom padding to prevent footer overlap */
+  padding:0 0 100px 0;
 }}
 .hero {{ max-width:1060px; margin:0 auto var(--gap-sm); display:flex; align-items:center; justify-content:center; }}
 .hero-logo {{ display:flex; align-items:center; justify-content:center; transform: scale(0.85); margin:10px 0 6px; }}
@@ -129,17 +127,23 @@ def _splash_html(logo_html: str) -> str:
 .metric p {{ margin:0; line-height:1.5; color:var(--text); text-align:left; }}
 
 
-/* BUSINESS IMPACTS - New Design */
+/* BUSINESS IMPACTS - Left impacts, right image */
 .impacts-section {{ margin:0 0 0 0; padding:0; }}
 .impacts-section h2 {{ text-align:center; margin:0 0 20px 0; font-size:26px; font-weight:900; letter-spacing:.02em; color:var(--text); }}
-.impacts-grid {{ 
+.impacts-container {{ 
   display:grid; 
-  grid-template-columns:repeat(2, minmax(400px, 520px)); 
-  gap:16px; 
+  grid-template-columns:1fr 400px; 
+  gap:24px; 
   max-width:1100px; 
   margin:0 auto; 
-  padding:0 16px; 
-  justify-content:center;
+  padding:0 16px;
+  align-items:stretch;
+}}
+.impacts-list {{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  justify-content:space-between;
 }}
 .impact-card {{
   background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -190,9 +194,40 @@ def _splash_html(logo_html: str) -> str:
   line-height:1.6;
   margin:0;
 }}
+.impact-image-card {{
+  background:transparent;
+  border-radius:16px;
+  padding:0;
+  box-shadow:0 4px 16px rgba(15, 23, 42, 0.08);
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+}}
+.impact-image-placeholder {{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#1e3c72;
+  font-size:18px;
+  font-weight:700;
+  text-align:center;
+  flex-direction:column;
+  gap:12px;
+  background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius:16px;
+  border:2px solid #e2e8f0;
+}}
+.impact-image-placeholder svg {{
+  stroke:#1e3c72;
+}}
 
 @media (max-width:1100px) {{ 
-  .impacts-grid {{ grid-template-columns:1fr; max-width:540px; }}
+  .impacts-container {{ grid-template-columns:1fr; }}
+  .impact-image-card {{ position:relative; min-height:300px; }}
 }}
 @media (max-width:900px) {{ .block,.features,.metrics {{ grid-template-columns:1fr; }} }}
 </style>
@@ -236,33 +271,46 @@ def _splash_html(logo_html: str) -> str:
 
   <section class="impacts-section">
     <h2>BUSINESS IMPACTS</h2>
-    <div class="impacts-grid">
-      <div class="impact-card">
-        {LOSS_ICON}
-        <div class="impact-content">
-          <div class="impact-title">Sustain Financial Health</div>
-          <p class="impact-desc">Make smarter decisions faster to protect savings and prevent fraud early.</p>
+    <div class="impacts-container">
+      <div class="impacts-list">
+        <div class="impact-card">
+          {LOSS_ICON}
+          <div class="impact-content">
+            <div class="impact-title">Sustain Financial Health</div>
+            <p class="impact-desc">Make smarter decisions faster to protect savings and prevent fraud early.</p>
+          </div>
+        </div>
+        <div class="impact-card">
+          {SHIELD_ICON}
+          <div class="impact-content">
+            <div class="impact-title">Defend Against Smart Threats</div>
+            <p class="impact-desc">Intercept threats before they impact your bottom line or customer experience.</p>
+          </div>
+        </div>
+        <div class="impact-card">
+          {REVENUE_ICON}
+          <div class="impact-content">
+            <div class="impact-title">Accelerate Trusted Approvals</div>
+            <p class="impact-desc">Maintain approvals and cash flow while minimizing false declines.</p>
+          </div>
+        </div>
+        <div class="impact-card">
+          {SPEED_ICON}
+          <div class="impact-content">
+            <div class="impact-title">Stay Resilient</div>
+            <p class="impact-desc">Accelerate approvals and keep operations running without disruption.</p>
+          </div>
         </div>
       </div>
-      <div class="impact-card">
-        {SHIELD_ICON}
-        <div class="impact-content">
-          <div class="impact-title">Defend Against Smart Threats</div>
-          <p class="impact-desc">Intercept threats before they impact your bottom line or customer experience.</p>
-        </div>
-      </div>
-      <div class="impact-card">
-        {REVENUE_ICON}
-        <div class="impact-content">
-          <div class="impact-title">Accelerate Trusted Approvals</div>
-          <p class="impact-desc">Maintain approvals and cash flow while minimizing false declines.</p>
-        </div>
-      </div>
-      <div class="impact-card">
-        {SPEED_ICON}
-        <div class="impact-content">
-          <div class="impact-title">Stay Resilient</div>
-          <p class="impact-desc">Accelerate approvals and keep operations running without disruption.</p>
+      <div class="impact-image-card">
+        <div class="impact-image-placeholder">
+          {impact_image_html if impact_image_html else '''
+          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <div>Protected & Secure</div>
+          '''}
         </div>
       </div>
     </div>
@@ -281,13 +329,16 @@ def show_splash():
 
     if st.session_state.show_splash:
         logo_html = ""
+        impact_image_html = ""
         try:
             logo_html = img_tag(LOGO_PATH, h=140)
+            # Add your impact image here - example:
+            impact_image_html = img_tag("flow.png", h=428,w=400,  style="border-radius:12px;")
         except Exception:
             pass
 
         with st.session_state.splash_ph.container():
-            html_comp(_splash_html(logo_html), height=1200, scrolling=False)
+            html_comp(_splash_html(logo_html, impact_image_html), height=1400, scrolling=False)
 
             st.markdown("<div class='after-splash'>", unsafe_allow_html=True)
             col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
