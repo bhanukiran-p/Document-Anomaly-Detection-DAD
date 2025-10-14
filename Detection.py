@@ -91,7 +91,7 @@ st.markdown("""
 }
 
 .header-logo {
-  height: 45px;
+  height: 70px;
   width: auto;
 }
 
@@ -293,6 +293,36 @@ section[aria-label="sidebar"],
   font-weight: 900;
   line-height: 1;
 }
+            
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #1e3c72;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  margin-right: 50px;
+}
+
+.login-btn:hover {
+  background-color: #344F80;
+  border-color: #999;
+}
+
+.login-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
 
 .score-low {color: #059669;}
 .score-medium {color: #f59e0b;}
@@ -370,18 +400,26 @@ def add_header():
     # Header with hamburger
     st.markdown(f"""
     <div class="app-header">
-      <div class="header-left">
-        <a href="/" target="_self">
-        {logo_html}
-        </a>
-      </div>
-      <div class="header-right">
-        <div class="hamburger-menu" id="hamburgerBtn">
-          <div class="hamburger-line"></div>
-          <div class="hamburger-line"></div>
-          <div class="hamburger-line"></div>
+        <div class="header-left">
+            <a href="/" target="_self">
+            {logo_html}
+            </a>
         </div>
-      </div>
+        <div class="header-right">
+            <button class="login-btn" id="loginBtn">
+                <svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                    <polyline points="10 17 15 12 10 7"></polyline>
+                    <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+                <span>Login</span>
+            </button>
+            <div class="hamburger-menu" id="hamburgerBtn">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+        </div>
     </div>
     
     <div class="menu-backdrop" id="menuBackdrop"></div>
@@ -452,20 +490,160 @@ def add_header():
 
 add_header()
 
-# ---------- Splash screen ----------
-try:
-    from splash_screen import show_splash
-    
-    # Check if we should show splash
-    if "show_splash" not in st.session_state:
-        st.session_state.show_splash = True
+# ---------- Landing and Splash screens ----------
+# Initialize session states
+if "show_landing" not in st.session_state:
+    st.session_state.show_landing = True
+if "show_splash" not in st.session_state:
+    st.session_state.show_splash = False
 
-    if st.session_state.get("show_splash", True):
+# Landing page (shows first)
+if st.session_state.get("show_landing", True):
+    import pathlib
+    cwd = pathlib.Path(os.getcwd())
+    here = pathlib.Path(__file__).parent if "__file__" in globals() else cwd
+    candidates = [cwd/"FD.png", here/"FD.png", here/"assets"/"FD.png", cwd/"assets"/"FD.png"]
+    logo_path = next((p for p in candidates if p.exists()), None)
+    
+    logo_html = ""
+    if logo_path:
+        encoded = base64.b64encode(logo_path.read_bytes()).decode()
+        logo_html = f'<img src="data:image/png;base64,{encoded}" alt="Logo" style="max-width:400px;width:100%;height:auto; padding-bottom:40px; padding-right:50px;"/>'
+    
+    st.markdown("""
+        <style>
+        .stApp {
+            background: #ffffff !important;
+        }
+         .stApp {
+            background: #ffffff !important;
+        }
+        .landing-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-bottom:18px;
+        }
+        .landing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(30, 60, 114, 0.15);
+            border-color: #1e3c72;
+        }
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1e3c72;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        .card-description {
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .disabled-button {
+            background: #7a9cc6 !important; /* Lighter, desaturated blue */
+            color: #e8f0f8 !important; /* Very light blue-tinted text */
+            border: none !important;
+            border-radius: 10px !important;
+            padding: 12px 22px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.04em !important;
+            width: 100%;
+            text-align: center;
+            cursor: not-allowed;
+            opacity: 0.65 !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 20px 20px;'>
+            {logo_html}
+            <h1 style='font-size:2.5rem;font-weight:900;color:#1e3c72;text-align:center;letter-spacing:-0.02em;'>Choose Your DAD Solution</h1>
+            <p style='font-size:1.1rem;color:#475569;font-weight:500;margin:0 0 60px 0;text-align:center;padding-right:30px;'>Powered by Advanced AI Detection Technology</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3, gap="large")
+
+    with col2:
+        st.markdown("""
+            <div class='landing-card'>
+                <div class='card-icon'>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                </div>
+                <h3 class='card-title'>Finance</h3>
+                <p class='card-description'>Detect fraud in financial documents, checks, and transactions with real-time analysis</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ENTER FINANCE", type="primary", use_container_width=True, key="enter_btn"):
+            st.session_state.show_landing = False
+            st.session_state.show_splash = True
+            st.rerun()
+    
+    with col1:
+        st.markdown("""
+            <div class='landing-card'>
+                <div class='card-icon'>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                </div>
+                <h3 class='card-title'>Education</h3>
+                <p class='card-description'>Ensure academic integrity and verify educational documents and assessments</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+            <div class='landing-card'>
+                <div class='card-icon'>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <h3 class='card-title'>Healthcare</h3>
+                <p class='card-description'>Verify medical records and ensure compliance with healthcare regulations</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
+
+    st.stop()
+
+# Splash screen (shows after landing)
+if st.session_state.get("show_splash", False):
+    try:
+        from splash_screen import show_splash
         show_splash()
         st.stop()
-except ImportError:
-    # Fallback to simple splash if splash_screen.py doesn't exist
-    def show_splash_screen():
+    except ImportError:
+        # Fallback to simple splash if splash_screen.py doesn't exist
         st.markdown("""
             <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;margin-top:80px;'>
                 <h1 style='margin:0;font-size:3rem;font-weight:900;color:#1e3c72;'>Welcome to Fraud Detection</h1>
@@ -478,14 +656,9 @@ except ImportError:
             if st.button("Get Started", type="primary", use_container_width=True):
                 st.session_state.show_splash = False
                 st.rerun()
-
-    # Check if we should show splash
-    if "show_splash" not in st.session_state:
-        st.session_state.show_splash = True
-
-    if st.session_state.get("show_splash", True):
-        show_splash_screen()
         st.stop()
+
+add_header()
 
 # ---------- ML helpers ----------
 try:

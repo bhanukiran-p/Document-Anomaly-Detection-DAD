@@ -118,7 +118,10 @@ st.markdown("""
         letter-spacing: -0.02em;
         margin: 0;
     }
-
+    .header-logo {
+        height: 70px;
+        width: auto;
+    }
     /* Upload Box Styling */
     .upload-box {
         background: #1e3c72;
@@ -234,7 +237,7 @@ def add_fixed_logo():
         st.markdown(f"""
             <div class="fixed-logo">
                 <a href="/" target="_self">
-                    <img src="data:image/png;base64,{encoded}" alt="FDN Logo" />
+                    <img src="data:image/png;base64,{encoded}" alt="FDN Logo" class="header-logo" />
                 </a>
             </div>
         """, unsafe_allow_html=True)

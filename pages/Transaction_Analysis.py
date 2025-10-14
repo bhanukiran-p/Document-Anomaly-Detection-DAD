@@ -101,7 +101,7 @@ st.markdown("""
 }
 
 .header-logo {
-  height: 45px;
+  height: 70px;
   width: auto;
 }
 
