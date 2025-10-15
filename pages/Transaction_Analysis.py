@@ -464,7 +464,13 @@ except ImportError:
         h = hashlib.sha256(str(data).encode()).hexdigest()
         return (int(h, 16) % 1000) / 1000.0
 
-def get_risk_level(score):
+def get_risk_level(score, amount=0):
+    # Automatically escalate to HIGH RISK for extremely large amounts
+    if amount > 100000:
+        return "HIGH RISK", "high"
+    elif amount > 50000 and score >= 0.5:
+        return "HIGH RISK", "high"
+    
     if score >= 0.7: return "HIGH RISK", "high"
     elif score >= 0.4: return "MEDIUM RISK", "medium"
     else: return "LOW RISK", "low"
@@ -472,9 +478,12 @@ def get_risk_level(score):
 def get_detailed_risk_factors(transaction_data, fraud_score):
     f = []
     amount = float(transaction_data.get('amount', 0))
-    if amount > 10000: f.append(f"Very high transaction amount (${amount:,.2f})")
-    elif amount > 5000: f.append(f"High transaction amount (${amount:,.2f})")
-    elif amount > 1000: f.append(f"Moderate transaction amount (${amount:,.2f})")
+    if amount > 500000: f.append(f"⚠️ CRITICAL: Extremely high transaction amount (${amount:,.2f})")
+    elif amount > 100000: f.append(f"⚠️ Very high transaction amount (${amount:,.2f})")
+    elif amount > 50000: f.append(f"High transaction amount (${amount:,.2f})")
+    elif amount > 10000: f.append(f"Elevated transaction amount (${amount:,.2f})")
+    elif amount > 5000: f.append(f"Moderate transaction amount (${amount:,.2f})")
+    
     tod = transaction_data.get('time', '')
     if "Night" in tod: f.append("Unusual transaction time (night hours)")
     device = transaction_data.get('device', '')
@@ -571,7 +580,8 @@ with c2:
         r = st.session_state.transaction_results
         d = r['data']
         s = float(r['fraud_score'])
-        level, risk_class = get_risk_level(s)
+        amount = float(d.get('amount', 0))
+        level, risk_class = get_risk_level(s, amount)
 
         st.markdown("<h3>Analysis Results</h3>", unsafe_allow_html=True)
         
@@ -591,10 +601,10 @@ with c2:
             st.markdown(f"<div class='factor'><div class='dot'>!</div><span>{fct}</span></div>", unsafe_allow_html=True)
 
         # Recommendations
-        if s >= 0.7:
-            st.markdown(f"<div class='rec rec-high'><h4>{icon_check()} Recommendations</h4><div>BLOCK — High fraud risk. Require additional verification and manual review.</div></div>", unsafe_allow_html=True)
-        elif s >= 0.4:
-            st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>REQUEST VERIFICATION — Medium risk. Add extra authentication.</div></div>", unsafe_allow_html=True)
+        if amount > 100000 or s >= 0.7:
+            st.markdown(f"<div class='rec rec-high'><h4>{icon_check()} Recommendations</h4><div>🚫 BLOCK IMMEDIATELY — Critical fraud risk detected. Require manual review, multi-factor authentication, and compliance verification before processing.</div></div>", unsafe_allow_html=True)
+        elif amount > 50000 or s >= 0.4:
+            st.markdown(f"<div class='rec rec-medium'><h4>{icon_check()} Recommendations</h4><div>⚠️ REQUEST VERIFICATION — Medium to high risk. Require additional authentication, identity verification, and supervisor approval.</div></div>", unsafe_allow_html=True)
         else:
             st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>APPROVE — Low fraud risk.</div></div>", unsafe_allow_html=True)
 
