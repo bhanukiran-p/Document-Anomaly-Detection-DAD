@@ -478,8 +478,8 @@ def get_risk_level(score, amount=0):
 def get_detailed_risk_factors(transaction_data, fraud_score):
     f = []
     amount = float(transaction_data.get('amount', 0))
-    if amount > 500000: f.append(f"⚠️ CRITICAL: Extremely high transaction amount (${amount:,.2f})")
-    elif amount > 100000: f.append(f"⚠️ Very high transaction amount (${amount:,.2f})")
+    if amount > 500000: f.append(f" CRITICAL: Extremely high transaction amount (${amount:,.2f})")
+    elif amount > 100000: f.append(f" Very high transaction amount (${amount:,.2f})")
     elif amount > 50000: f.append(f"High transaction amount (${amount:,.2f})")
     elif amount > 10000: f.append(f"Elevated transaction amount (${amount:,.2f})")
     elif amount > 5000: f.append(f"Moderate transaction amount (${amount:,.2f})")
