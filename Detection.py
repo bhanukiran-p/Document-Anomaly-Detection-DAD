@@ -337,9 +337,9 @@ section[aria-label="sidebar"],
             
 /* Info grid */
 .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;}
-.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px;}
+.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px; margin-bottom: 8px;}
 .item:hover {
-  transform:translateY(-6px) scale(1.02);
+  transform:translateY(-2px) scale(1.01);
   box-shadow:0 12px 32px rgba(15, 23, 42, 0.15);
   border-color:var(--brand);
 }
@@ -515,8 +515,27 @@ if st.session_state.get("show_landing", True):
         .stApp {
             background: #ffffff !important;
         }
-         .stApp {
-            background: #ffffff !important;
+        /* Responsive column layout */
+        @media (max-width: 1200px) {
+            .card-title {
+                font-size: 1.2rem !important;
+            }
+            .card-description {
+                font-size: 0.85rem !important;
+            }
+            .card-icon {
+                width: 70px !important;
+                height: 70px !important;
+            }
+        }
+        @media (max-width: 900px) {
+            .landing-card {
+                min-height: 280px !important;
+            }
+            .card-icon {
+                width: 60px !important;
+                height: 60px !important;
+            }
         }
         .landing-card {
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
@@ -525,10 +544,11 @@ if st.session_state.get("show_landing", True):
             padding: 32px 24px;
             text-align: center;
             transition: all 0.3s ease;
-            height: 100%;
+            min-height: 320px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             gap: 16px;
             margin-bottom:18px;
         }
@@ -560,6 +580,9 @@ if st.session_state.get("show_landing", True):
             font-weight: 500;
             line-height: 1.5;
             margin: 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
         }
         .disabled-button {
             background: #7a9cc6 !important; /* Lighter, desaturated blue */
@@ -580,12 +603,28 @@ if st.session_state.get("show_landing", True):
     st.markdown(f"""
         <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 20px 20px;'>
             {logo_html}
-            <h1 style='font-size:2.5rem;font-weight:900;color:#1e3c72;text-align:center;letter-spacing:-0.02em;'>Choose Your DAD Solution</h1>
-            <p style='font-size:1.1rem;color:#475569;font-weight:500;margin:0 0 60px 0;text-align:center;padding-right:30px;'>Powered by Advanced AI Detection Technology</p>
+            <h1 style='font-size:clamp(1.8rem, 4vw, 2.5rem);font-weight:900;color:#1e3c72;text-align:center;letter-spacing:-0.02em;'>Choose Your DAD Solution</h1>
+            <p style='font-size:clamp(0.95rem, 2vw, 1.1rem);color:#475569;font-weight:500;margin:0 0 60px 0;text-align:center;padding-right:30px;'>Powered by Advanced AI Detection Technology</p>
         </div>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns(3, gap="large")
+    # Responsive column layout based on screen size
+    col1, col2, col3, col4 = st.columns(4, gap="medium")
+
+    with col1:
+        st.markdown("""
+            <div class='landing-card'>
+                <div class='card-icon'>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                </div>
+                <h3 class='card-title'>Education</h3>
+                <p class='card-description'>Ensure academic integrity and verify educational documents and assessments</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
@@ -605,21 +644,6 @@ if st.session_state.get("show_landing", True):
             st.session_state.show_splash = True
             st.rerun()
     
-    with col1:
-        st.markdown("""
-            <div class='landing-card'>
-                <div class='card-icon'>
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                </div>
-                <h3 class='card-title'>Education</h3>
-                <p class='card-description'>Ensure academic integrity and verify educational documents and assessments</p>
-            </div>
-        """, unsafe_allow_html=True)
-        st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
-    
     with col3:
         st.markdown("""
             <div class='landing-card'>
@@ -630,6 +654,21 @@ if st.session_state.get("show_landing", True):
                 </div>
                 <h3 class='card-title'>Healthcare</h3>
                 <p class='card-description'>Verify medical records and ensure compliance with healthcare regulations</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
+
+    with col4:
+        st.markdown("""
+            <div class='landing-card'>
+                <div class='card-icon'>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h3 class='card-title'>Federal Services</h3>
+                <p class='card-description'>Secure government document verification and identity authentication for federal agencies</p>
             </div>
         """, unsafe_allow_html=True)
         st.markdown("<div class='disabled-button'>COMING SOON</div>", unsafe_allow_html=True)
@@ -907,7 +946,7 @@ with c2:
             st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>Low risk — transaction appears legitimate.</div></div>", unsafe_allow_html=True)
 
         # EXTRACTED INFORMATION AT BOTTOM
-        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 8px 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 0 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
         st.markdown("<div class='grid'>", unsafe_allow_html=True)
         for k, v in res['extracted_data'].items():
             st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)

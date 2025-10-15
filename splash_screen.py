@@ -350,7 +350,7 @@ def show_splash():
             st.markdown("</div>", unsafe_allow_html=True)
 
             st.markdown(
-                "<div style='text-align:center; font-size:18px; color:#0b2a6f; font-weight:600; margin:24px auto 80px; padding:0 20px; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,\"Noto Sans\"; font-style:italic; position:relative; z-index:10000; background:#ffffff;'>"
+                "<div style='text-align:center; font-size:18px; color:#0b2a6f; font-weight:600; margin:24px auto 120px; padding:0 20px; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,\"Noto Sans\"; font-style:italic; position:relative; background:#ffffff;'>"
                 "\"Just like Dad protects the home, Xforia's DAD keeps fraud from going prone\""
                 "</div>",
                 unsafe_allow_html=True

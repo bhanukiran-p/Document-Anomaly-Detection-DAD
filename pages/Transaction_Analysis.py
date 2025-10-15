@@ -305,9 +305,9 @@ section[aria-label="sidebar"],
             
 /* Info grid */
 .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;}
-.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px;}
+.item{background:#fbfdff; border-left:3px solid var(--brand); border-radius:8px; padding:10px; margin-bottom:8px;}
 .item:hover {
-  transform:translateY(-6px) scale(1.02);
+  transform:translateY(-2px) scale(1.01);
   box-shadow:0 12px 32px rgba(15, 23, 42, 0.15);
   border-color:var(--brand);
 }
@@ -599,7 +599,7 @@ with c2:
             st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>APPROVE — Low fraud risk.</div></div>", unsafe_allow_html=True)
 
         # Transaction Summary
-        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 8px 0;'>{icon_info()} Transaction Summary</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 0 0;'>{icon_info()} Transaction Summary</h4>", unsafe_allow_html=True)
         st.markdown("<div class='grid'>", unsafe_allow_html=True)
         for label, value in [
             ("Account", d['account_number']),
