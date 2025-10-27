@@ -9,3 +9,10 @@ scikit_learn
 streamlit
 streamlit_plotly_events
 xgboost
+uvicorn
+fastapi
+pydantic
+python-multipart
+aiofiles
+requests
+python-dotenv
