@@ -1140,6 +1140,8 @@ if "show_landing" not in st.session_state:
     st.session_state.show_landing = True
 if "show_splash" not in st.session_state:
     st.session_state.show_splash = False
+if "show_choice_page" not in st.session_state:
+    st.session_state.show_choice_page = False
 
 if st.session_state.get("show_landing", True):
     import pathlib
@@ -1241,6 +1243,172 @@ if st.session_state.get("show_splash", False):
                 st.session_state.show_splash = False
                 st.rerun()
         st.stop()
+
+# Choice Page - 2-button selection between Real Time and On Demand
+if st.session_state.get("show_choice_page", False):
+    import pathlib
+    cwd = pathlib.Path(os.getcwd())
+    here = pathlib.Path(__file__).parent if "__file__" in globals() else cwd
+    candidates = [cwd/"DAD_red_black.png", here/"DAD_red_black.png", here/"assets"/"DAD_red_black.png", cwd/"assets"/"DAD_red_black.png"]
+    logo_path = next((p for p in candidates if p.exists()), None)
+    
+    logo_html = ""
+    if logo_path:
+        encoded = base64.b64encode(logo_path.read_bytes()).decode()
+        logo_html = f'<img src="data:image/png;base64,{encoded}" alt="Logo" style="max-width:300px;width:100%;height:auto; margin-bottom:20px;"/>'
+    
+    st.markdown("""
+        <style>
+        .stApp {background: #ffffff !important;}
+        .choice-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            min-height: 70vh;
+        }
+        .choice-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .choice-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .choice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .choice-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(30, 60, 114, 0.15);
+            border-color: #1e3c72;
+        }
+        .choice-card:hover::before {
+            opacity: 1;
+        }
+        .choice-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .choice-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e3c72;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.02em;
+        }
+        .choice-description {
+            font-size: 1rem;
+            color: #475569;
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .choice-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px 24px;
+            background: #db123d;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .choice-button:hover {
+            filter: brightness(0.95);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 900px) {
+            .choice-cards { grid-template-columns: 1fr; gap: 20px; }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div class='choice-container'>
+            {logo_html}
+            <h1 style='font-size:clamp(2rem, 4vw, 2.5rem);font-weight:900;color:#1e3c72;text-align:center;letter-spacing:-0.02em;margin-bottom:10px;'>Choose Transaction Type</h1>
+            <p style='font-size:clamp(0.95rem, 2vw, 1.1rem);color:#475569;font-weight:500;margin:0 0 40px 0;text-align:center;'>Select your preferred fraud detection method</p>
+            <div class='choice-cards'>
+                <div class='choice-card'>
+                    <div class='choice-icon'>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class='choice-title'>Real Time Transaction</h3>
+                    <p class='choice-description'>Analyze online transactions instantly with real-time fraud detection and instant scoring</p>
+                </div>
+                <div class='choice-card'>
+                    <div class='choice-icon'>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class='choice-title'>On Demand Transactions</h3>
+                    <p class='choice-description'>Upload and analyze check images with OCR extraction and comprehensive fraud assessment</p>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Buttons positioned under their respective cards
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        if st.button("Real Time Transaction", type="primary", use_container_width=True, key="realtime_btn"):
+            st.switch_page("pages/Transaction_Analysis.py")
+    
+    with col2:
+        if st.button("On Demand Transactions", type="primary", use_container_width=True, key="ondemand_btn"):
+            st.session_state.show_choice_page = False
+            st.rerun()
+    
+    st.markdown("""
+        <div style="position:fixed;left:0;right:0;bottom:0;height:64px;z-index:9999;background:#1e3c72;color:#fff;display:flex;justify-content:center;align-items:center;gap:18px;font-weight:700;">
+            <span>Where Innovation Meets Security</span>
+            <span style="opacity:.6;">|</span>
+            <span>Zero Tolerance for Fraud</span>
+            <span style="opacity:.6;">|</span>
+            <span>© Xforia DAD</span>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.stop()
 
 try:
     from ML_Model import ml_transaction_analysis, mock_transaction_analysis
@@ -1454,100 +1622,12 @@ with c2:
             </div>
         """, unsafe_allow_html=True)
 
-# FAB Button and Footer
 st.markdown("""
-            <style>
-            /* FAB Button */
-            .fab-button {
-                position: fixed;
-                right: 32px;
-                bottom: 96px;
-                width: 60px;
-                height: 60px;
-                background: #1e3c72;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 16px rgba(30, 60, 114, 0.4);
-                cursor: pointer;
-                z-index: 10000;
-                transition: all 0.3s ease;
-            }
-            .fab-button:hover {
-                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-                box-shadow: 0 6px 24px rgba(30, 60, 114, 0.6);
-                transform: scale(1.1) translateY(-2px);
-            }
-            .fab-button:active {
-                transform: scale(1.05) translateY(0px);
-            }
-            .fab-button svg {
-                width: 28px;
-                height: 28px;
-                stroke: white;
-                stroke-width: 2;
-                fill: none;
-            }
-            
-            /* Footer */
-            .splash-footer {
-                position: fixed;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                height: 64px;
-                z-index: 9999;
-                padding:10px 16px; 
-                color:#fff; 
-                background:#1e3c72; 
-                display:flex; 
-                align-items:center; 
-                justify-content:center; 
-                gap:18px; 
-                box-shadow:0 -2px 10px rgba(0,0,0,.22); 
-                font-weight:700; 
-                font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,'Noto Sans';
-                transition: all 0.3s ease;
-                overflow: hidden;
-            }
-            .splash-footer::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-                transition: left 0.5s ease;
-            }
-            .splash-footer:hover {
-                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-                box-shadow: 0 -4px 20px rgba(0,0,0,.3);
-                transform: translateY(-2px);
-            }
-            .splash-footer:hover::before {
-                left: 100%;
-            }
-            .footer-divider {
-                opacity: .6;
-            }
-            </style>
-            
-            <!-- FAB Button -->
-            <div class="fab-button" onclick="alert('Message feature coming soon!')">
-                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-            </div>
-            
-            <!-- Footer -->
-            <div class="custom-footer">
-            <span>Where Innovation Meets Security</span>
-            <span class="footer-divider">|</span>
-            <span>Zero Tolerance for Fraud</span>
-            <span class="footer-divider">|</span>
-            <span>© Xforia DAD</span>
-            </div>
-            """, unsafe_allow_html=True)
-        
+<div class="custom-footer">
+  <span>Where Innovation Meets Security</span>
+  <span class="footer-divider">|</span>
+  <span>Zero Tolerance for Fraud</span>
+  <span class="footer-divider">|</span>
+  <span>© Xforia DAD</span>
+</div>
+""", unsafe_allow_html=True)
