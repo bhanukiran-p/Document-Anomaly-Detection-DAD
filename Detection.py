@@ -1391,7 +1391,7 @@ if st.session_state.get("show_choice_page", False):
     col1, col2, col3, col4 = st.columns(4, gap="large")
     with col2:
         if st.button("Real Time Transaction", type="primary", use_container_width=True, key="realtime_btn"):
-            st.switch_page("pages/Transaction_Analysis.py")
+            go_dashboard()
     
     with col3:
         if st.button("On Demand Transactions", type="primary", use_container_width=True, key="ondemand_btn"):
@@ -1542,9 +1542,9 @@ def get_check_risk_factors(check_data, ml_score, rule_score):
 col_title, col_btn1 = st.columns([4, 1])
 with col_title:
     st.markdown("<h1 class='page-title'>Document Anomaly For Finance</h1>", unsafe_allow_html=True)
-with col_btn1:
-    if st.button("Real-time Transaction", key="transaction_btn", type="secondary", use_container_width=True):
-        go_transaction_page()
+# with col_btn1:
+#     if st.button("Insights", key="dashboard_btn", type="secondary", use_container_width=True):
+#         go_dashboard()
 
 st.markdown("<h2 class='section-title'>Enhanced Analysis with AI</h2>", unsafe_allow_html=True)
 

@@ -380,8 +380,25 @@ st.markdown("<div class='with-footer'>", unsafe_allow_html=True)
 # ---------- PAGE ROUTING ----------
 if st.session_state.current_page == 'upload':
     # ---------- UPLOAD PAGE ----------
-    st.markdown('<h1 style="margin:2px 0 10px 0; font-size:28px;"><i class="fas fa-cloud-upload-alt"></i> Data Upload</h1>', unsafe_allow_html=True)
+    st.markdown("<h1 class='page-title'>Real-time Transaction Analysis</h1>", unsafe_allow_html=True)
     
+    st.markdown("""
+    <div class='upload-box'>
+        <h2><i class='fas fa-plug'></i> Connect to your Banking Systems</h2>
+        <p>Enter your Banking System URL to fetch transaction data</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.text_input("Banking System URL", placeholder="https://api.example.com/transactions", key="api_url_input")
+    
+    # OR divider
+    st.markdown("""
+    <div style='text-align: center; margin: 30px 0;'>
+        <span style='display: inline-block; padding: 8px 20px; background: #e2e8f0; border-radius: 20px; 
+                     font-weight: 700; color: #1e3c72; font-size: 16px;'>OR</span>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.markdown("""
     <div class='upload-box'>
         <h2><i class='fas fa-file-upload'></i> Upload Your Data File</h2>
