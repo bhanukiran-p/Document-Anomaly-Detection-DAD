@@ -990,9 +990,7 @@ def get_detailed_risk_factors(transaction_data, fraud_score):
 col_title, col_btn1, col_btn2 = st.columns([3, 1, 1])
 with col_title:
     st.markdown("<h1 class='page-title'>Real-time Transaction Analysis</h1>", unsafe_allow_html=True)
-with col_btn1:
-    if st.button("Check Analysis", key="check_btn", type="secondary", use_container_width=True):
-        go_home()
+
 with col_btn2:
     if st.button("Insights", key="dashboard_btn", type="secondary", use_container_width=True):
         go_dashboard()

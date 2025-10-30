@@ -1265,7 +1265,7 @@ if st.session_state.get("show_choice_page", False):
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 60px 20px 20px 20px;
             min-height: 70vh;
         }
         .choice-cards {
@@ -1388,12 +1388,12 @@ if st.session_state.get("show_choice_page", False):
     """, unsafe_allow_html=True)
     
     # Buttons positioned under their respective cards
-    col1, col2 = st.columns(2, gap="large")
-    with col1:
+    col1, col2, col3, col4 = st.columns(4, gap="large")
+    with col2:
         if st.button("Real Time Transaction", type="primary", use_container_width=True, key="realtime_btn"):
             st.switch_page("pages/Transaction_Analysis.py")
     
-    with col2:
+    with col3:
         if st.button("On Demand Transactions", type="primary", use_container_width=True, key="ondemand_btn"):
             st.session_state.show_choice_page = False
             st.rerun()
@@ -1419,11 +1419,11 @@ except ImportError:
         return (int(h, 16) % 1000) / 1000.0
     mock_transaction_analysis = ml_transaction_analysis
 
-MINDEE_API_KEY = "md_KqeDU4LG1zvPTpm7yANOMZsU5bDnb3MN"
+MINDEE_API_KEY = "md_IdbyoMF3oVF18w3TquR1ivHmMufgzgG4"
 MINDEE_ACCOUNT_NAME = ""
 MINDEE_ENDPOINT_NAME = ""
 MINDEE_VERSION = "1"
-MINDEE_MODEL_ID = "ae8aebe3-40a8-49ec-9545-daf787b1bbe5"
+MINDEE_MODEL_ID = "c25da62c-dad8-4858-93b9-be97c1d50277"
 
 def extract_check_data(response):
     try:
@@ -1603,11 +1603,11 @@ with c2:
         else:
             st.markdown(f"<div class='rec rec-low'><h4>{icon_check()} Recommendations</h4><div>Low risk — transaction appears legitimate.</div></div>", unsafe_allow_html=True)
 
-        st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 0 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
-        st.markdown("<div class='grid'>", unsafe_allow_html=True)
-        for k, v in res['extracted_data'].items():
-            st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        # st.markdown(f"<h4 style='display:flex;align-items:center;gap:8px;margin:20px 0 0 0;'>{icon_info()} Extracted Information</h4>", unsafe_allow_html=True)
+        # st.markdown("<div class='grid'>", unsafe_allow_html=True)
+        # for k, v in res['extracted_data'].items():
+        #     st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)
+        # st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("Upload a check image on the left to begin analysis")
         st.markdown("""
@@ -1622,12 +1622,99 @@ with c2:
             </div>
         """, unsafe_allow_html=True)
 
+# FAB Button and Footer
 st.markdown("""
-<div class="custom-footer">
-  <span>Where Innovation Meets Security</span>
-  <span class="footer-divider">|</span>
-  <span>Zero Tolerance for Fraud</span>
-  <span class="footer-divider">|</span>
-  <span>© Xforia DAD</span>
-</div>
-""", unsafe_allow_html=True)
+            <style>
+            /* FAB Button */
+            .fab-button {
+                position: fixed;
+                right: 32px;
+                bottom: 96px;
+                width: 60px;
+                height: 60px;
+                background: #1e3c72;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 16px rgba(30, 60, 114, 0.4);
+                cursor: pointer;
+                z-index: 10000;
+                transition: all 0.3s ease;
+            }
+            .fab-button:hover {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                box-shadow: 0 6px 24px rgba(30, 60, 114, 0.6);
+                transform: scale(1.1) translateY(-2px);
+            }
+            .fab-button:active {
+                transform: scale(1.05) translateY(0px);
+            }
+            .fab-button svg {
+                width: 28px;
+                height: 28px;
+                stroke: white;
+                stroke-width: 2;
+                fill: none;
+            }
+            
+            /* Footer */
+            .splash-footer {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 64px;
+                z-index: 9999;
+                padding:10px 16px; 
+                color:#fff; 
+                background:#1e3c72; 
+                display:flex; 
+                align-items:center; 
+                justify-content:center; 
+                gap:18px; 
+                box-shadow:0 -2px 10px rgba(0,0,0,.22); 
+                font-weight:700; 
+                font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,'Noto Sans';
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+            .splash-footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                transition: left 0.5s ease;
+            }
+            .splash-footer:hover {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                box-shadow: 0 -4px 20px rgba(0,0,0,.3);
+                transform: translateY(-2px);
+            }
+            .splash-footer:hover::before {
+                left: 100%;
+            }
+            .footer-divider {
+                opacity: .6;
+            }
+            </style>
+            
+            <!-- FAB Button -->
+            <div class="fab-button" onclick="alert('Message feature coming soon!')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            
+            <!-- Footer -->
+            <div class="custom-footer">
+                <span>Where Innovation Meets Security</span>
+                <span class="footer-divider">|</span>
+                <span>Zero Tolerance for Fraud</span>
+                <span class="footer-divider">|</span>
+                <span>© Xforia DAD</span>
+            </div>
+            """, unsafe_allow_html=True)

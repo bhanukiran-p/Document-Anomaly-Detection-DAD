@@ -359,8 +359,43 @@ def show_splash():
 
 
             # Footer with hover effect - Fixed at bottom
+            # FAB Button and Footer
             st.markdown("""
             <style>
+            /* FAB Button */
+            .fab-button {
+                position: fixed;
+                right: 32px;
+                bottom: 96px;
+                width: 60px;
+                height: 60px;
+                background: #1e3c72;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 16px rgba(30, 60, 114, 0.4);
+                cursor: pointer;
+                z-index: 10000;
+                transition: all 0.3s ease;
+            }
+            .fab-button:hover {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                box-shadow: 0 6px 24px rgba(30, 60, 114, 0.6);
+                transform: scale(1.1) translateY(-2px);
+            }
+            .fab-button:active {
+                transform: scale(1.05) translateY(0px);
+            }
+            .fab-button svg {
+                width: 28px;
+                height: 28px;
+                stroke: white;
+                stroke-width: 2;
+                fill: none;
+            }
+            
+            /* Footer */
             .splash-footer {
                 position: fixed;
                 left: 0;
@@ -403,6 +438,15 @@ def show_splash():
                 opacity: .6;
             }
             </style>
+            
+            <!-- FAB Button -->
+            <div class="fab-button" onclick="alert('Message feature coming soon!')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            
+            <!-- Footer -->
             <div class="splash-footer">
               <span>Where Innovation Meets Security</span>
               <span class="footer-divider">|</span>
