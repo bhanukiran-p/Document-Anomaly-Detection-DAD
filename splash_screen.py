@@ -240,12 +240,12 @@ def _splash_html(logo_html: str, impact_image_html: str = "") -> str:
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">D</span>ocument</span></div>
       <h3>Trusted document screening</h3>
-      <p>Automatically screen every document and validate both its format and content to ensure compliance and authenticity.</p>
+      <p>Automatically perform KYC checks to screen every document and validate both its format and content to ensure compliance and authenticity.</p>
     </div>
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">A</span>nomaly</span></div>
       <h3>Behavior-aware risk detection</h3>
-      <p>The anomaly engine detects suspicious patterns and applies behavioral analysis to surface risks that humans might miss.</p>
+      <p>The Anomaly Engine detects suspicious patterns and applies behavioral analysis to identify Anti-Money Laundering (AML) risks that humans might miss.</p>
     </div>
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">D</span>etection</span></div>
