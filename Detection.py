@@ -1546,13 +1546,13 @@ with col_btn1:
     if st.button("Real-time Transaction", key="transaction_btn", type="secondary", use_container_width=True):
         go_transaction_page()
 
-st.markdown("<h2 class='section-title'>Enhanced Check Analysis with AI</h2>", unsafe_allow_html=True)
+st.markdown("<h2 class='section-title'>Enhanced Analysis with AI</h2>", unsafe_allow_html=True)
 
 c1, c2 = st.columns([2,3], gap="large")
 
 with c1:
-    st.markdown("#### Upload Check Image")
-    uploaded_file = st.file_uploader("Drop your check image here", type=['jpg','jpeg','png'], label_visibility="collapsed", key="check_uploader")
+    st.markdown("#### Upload Files")
+    uploaded_file = st.file_uploader("Drop your file here", type=['jpg','jpeg','png'], label_visibility="collapsed", key="check_uploader")
     
     if uploaded_file:
         try:
@@ -1561,17 +1561,17 @@ with c1:
             st.image(img, use_container_width=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("Analyze Check", type="primary", key="analyze_check_btn", use_container_width=True):
-                with st.spinner("Analyzing your check..."):
+            if st.button("Analyze File", type="primary", key="analyze_check_btn", use_container_width=True):
+                with st.spinner("Analyzing your file..."):
                     uploaded_file.seek(0)
                     extracted, combined, raw, ml_s, rule_s, ml_ens = mindee_ocr_analysis_with_ml(uploaded_file)
                 
                 if extracted and combined is not None:
-                    st.success("Check processed successfully!")
+                    st.success("File processed successfully!")
                     st.session_state.check_results = {'extracted_data': extracted, 'fraud_score': combined, 'ml_score': ml_s, 'rule_score': rule_s, 'raw_data': raw, 'ml_ensemble': ml_ens}
                     st.rerun()
                 else:
-                    st.error("Unable to process the check. Please try again.")
+                    st.error("Unable to process the file. Please try again.")
         except Exception as e:
             st.error(f"Error: {e}")
 
@@ -1609,15 +1609,15 @@ with c2:
         #     st.markdown(f"<div class='item'><div class='lbl'>{k}</div><div class='val'>{v}</div></div>", unsafe_allow_html=True)
         # st.markdown("</div>", unsafe_allow_html=True)
     else:
-        st.info("Upload a check image on the left to begin analysis")
+        st.info("Upload a file on the left to begin analysis")
         st.markdown("""
             <div style='margin-top:20px; padding:20px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;'>
                 <h4 style='margin:0 0 12px 0; color:#1e3c72;'>How it works:</h4>
                 <ol style='margin:0; padding-left:20px; color:#475569;'>
-                    <li style='margin-bottom:8px;'>Upload a check image (JPG, JPEG, or PNG)</li>
-                    <li style='margin-bottom:8px;'>Click "Analyze Check" to process</li>
+                    <li style='margin-bottom:8px;'>Upload a file (JPG, JPEG, or PNG)</li>
+                    <li style='margin-bottom:8px;'>Click "Analyze File" to process</li>
                     <li style='margin-bottom:8px;'>View fraud risk score and detailed analysis</li>
-                    <li>Review recommendations and extracted check data</li>
+                    <li>Review recommendations and extracted file data</li>
                 </ol>
             </div>
         """, unsafe_allow_html=True)
