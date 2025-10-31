@@ -43,10 +43,21 @@ if 'show_preview' not in st.session_state:
 # ---------- GLOBAL CSS ----------
 st.markdown("""
     <style>
-    /* Hide sidebar */
+     /* Hide sidebar and hamburger menu */
     [data-testid="stSidebar"], button[title*="sidebar"],
     section[data-testid="stSidebar"], [data-testid="stSidebarNav"],
     [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    
+    /* Hide Streamlit header menu (hamburger icon and deploy button) */
+    #MainMenu { visibility: hidden !important; }
+    header[data-testid="stHeader"] { visibility: hidden !important; }
+    .stDeployButton { display: none !important; }
+    button[kind="header"] { display: none !important; }
+    [data-testid="stToolbar"] { display: none !important; }
+    
+    /* Hide footer "Made with Streamlit" */
+    footer { visibility: hidden !important; }
+    .viewerBadge_container__1QSob { display: none !important; }
 
     /* Make app full-height for fixed footer */
     html, body, [data-testid="stApp"] { height: 100%; }

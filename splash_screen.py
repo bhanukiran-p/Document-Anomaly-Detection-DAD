@@ -240,17 +240,17 @@ def _splash_html(logo_html: str, impact_image_html: str = "") -> str:
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">D</span>ocument</span></div>
       <h3>Trusted document screening</h3>
-      <p>Automatically perform KYC checks to screen every document and validate both its format and content to ensure compliance and authenticity.</p>
+      <p>Automatically screen every document to ensure regulatory compliance and authenticity — vital for KYC, AML, CDD, and account integrity.</p>
     </div>
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">A</span>nomaly</span></div>
       <h3>Behavior-aware risk detection</h3>
-      <p>The Anomaly Engine detects suspicious patterns and applies behavioral analysis to identify Anti-Money Laundering (AML) risks that humans might miss.</p>
+      <p>Detect suspicious patterns to surface risks that indicate sophisticated fraud and potential compliance breaches.</p>
     </div>
     <div class="card">
       <div class="top"><span class="word-with-first"><span class="first-letter">D</span>etection</span></div>
       <h3>Real-time fraud scoring</h3>
-      <p>Provides accurate, real-time monitoring with instant scoring so threats are flagged before they cause damage.</p>
+      <p>Provide accurate, instant monitoring so threats are flagged before they cause damage.</p>
     </div>
   </div>
 

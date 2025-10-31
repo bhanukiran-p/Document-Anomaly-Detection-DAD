@@ -1381,7 +1381,7 @@ if st.session_state.get("show_choice_page", False):
                         </svg>
                     </div>
                     <h3 class='choice-title'>On Demand Transactions</h3>
-                    <p class='choice-description'>Upload and analyze check images with OCR extraction and comprehensive fraud assessment</p>
+                    <p class='choice-description'>Upload and analyze with comprehensive fraud assessment</p>
                 </div>
             </div>
         </div>
